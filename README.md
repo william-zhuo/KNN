@@ -53,9 +53,6 @@ Implement additional machine learning models for comparison.
 
 Enhance UI with interactive drag-and-drop features.
 
-License
-
-This project is licensed under the MIT License.
 
 Contact
 
