@@ -8,7 +8,7 @@ WIDTH, HEIGHT = 800, 700  # Increased height for additional controls
 GRID_SIZE = 5  # Each grid cell is 5x5 pixels
 TEMP_GRID_SIZE = 9  # Temporary lower resolution while dragging
 POINTS_PER_COLOR = 4  # Initial number of points per color
-K = 3  # Initial number of neighbors
+K = 2  # Initial number of neighbors
 MAX_COLORS = 6  # Maximum number of colors
 
 # Colors
