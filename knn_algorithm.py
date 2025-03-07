@@ -33,18 +33,24 @@ font = pygame.font.Font(None, 24)
 
 def generate_points(existing_points=None):
     points = existing_points if existing_points else []
-    current_colors = set(p[2] for p in points)
-    missing_colors = [COLORS[i] for i in range(num_colors) if COLORS[i] not in current_colors]
+    color_counts = {color: sum(1 for p in points if p[2] == color) for color in COLORS[:num_colors]}
     
-    for color in missing_colors:
+    for color in COLORS[:num_colors]:
         cluster_x = random.randint(100, WIDTH - 100)
         cluster_y = random.randint(100, HEIGHT - 150)
-        for _ in range(points_per_color):
+        while color_counts[color] < points_per_color:
             points.append((
                 cluster_x + random.randint(-20, 20),
                 cluster_y + random.randint(-20, 20),
                 color
             ))
+            color_counts[color] += 1
+        while color_counts[color] > points_per_color:
+            for i, p in enumerate(points):
+                if p[2] == color:
+                    points.pop(i)
+                    color_counts[color] -= 1
+                    break
     return points
 
 points = generate_points()
