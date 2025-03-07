@@ -6,6 +6,7 @@ from collections import Counter
 # Constants
 WIDTH, HEIGHT = 800, 700  # Increased height for additional controls
 GRID_SIZE = 5  # Each grid cell is 5x5 pixels
+TEMP_GRID_SIZE = 9  # Temporary lower resolution while dragging
 POINTS_PER_COLOR = 4  # Initial number of points per color
 K = 3  # Initial number of neighbors
 MAX_COLORS = 6  # Maximum number of colors
@@ -21,6 +22,7 @@ COLORS = [
 # Global variables
 num_colors = 3  # Initial number of colors used
 points_per_color = POINTS_PER_COLOR  # User-adjustable points per color
+dragging = False  # Flag to track if a point is being dragged
 
 def lighten_color(color, factor=2.5):  # Increase factor to make colors much lighter
     return tuple(min(255, int(c * factor)) for c in color)
@@ -64,14 +66,14 @@ def find_k_nearest(point, points, k):
     distances.sort(key=lambda x: x[1])
     return [p[0] for p in distances[:k]]
 
-def classify_grid():
-    for x in range(0, WIDTH, GRID_SIZE):
-        for y in range(0, HEIGHT, GRID_SIZE):
+def classify_grid(grid_size):
+    for x in range(0, WIDTH, grid_size):
+        for y in range(0, HEIGHT, grid_size):
             neighbors = find_k_nearest((x, y), points, K)
             if neighbors:
                 most_common_color = Counter([p[2] for p in neighbors]).most_common(1)[0][0]
                 lighter_color = lighten_color(most_common_color)
-                pygame.draw.rect(screen, lighter_color, (x, y, GRID_SIZE, GRID_SIZE))
+                pygame.draw.rect(screen, lighter_color, (x, y, grid_size, grid_size))
 
 buttons = {
     "Increase K": (50, HEIGHT + 10, 100, 30),
@@ -98,7 +100,7 @@ def draw_buttons():
 running = True
 while running:
     screen.fill(WHITE)
-    classify_grid()
+    classify_grid(TEMP_GRID_SIZE if dragging else GRID_SIZE)
     
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -109,6 +111,7 @@ while running:
                 for i, p in enumerate(points):
                     if euclidean_distance((mx, my), (p[0], p[1])) < 10:
                         selected_index = i
+                        dragging = True
                         break
             else:
                 for key, (x, y, w, h) in buttons.items():
@@ -131,6 +134,7 @@ while running:
                             points = generate_points(points)
         elif event.type == pygame.MOUSEBUTTONUP:
             selected_index = None
+            dragging = False
         elif event.type == pygame.MOUSEMOTION and selected_index is not None:
             mx, my = event.pos
             x = max(0, min(WIDTH, mx))
