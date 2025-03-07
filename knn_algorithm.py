@@ -4,54 +4,60 @@ import random
 from collections import Counter
 
 # Constants
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 800, 700  # Increased height for additional controls
 GRID_SIZE = 5  # Each grid cell is 5x5 pixels
-POINT_COUNT = 4  # Initial number of points
+POINTS_PER_COLOR = 4  # Initial number of points per color
 K = 3  # Initial number of neighbors
+MAX_COLORS = 6  # Maximum number of colors
 
 # Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (255, 0, 255)]
+COLORS = [
+    (255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0),
+    (255, 0, 255), (0, 255, 255)
+]
 
-color_index = 0  # Rotating index for color assignment
+# Global variables
+num_colors = 3  # Initial number of colors used
+points_per_color = POINTS_PER_COLOR  # User-adjustable points per color
 
 def lighten_color(color, factor=2.5):  # Increase factor to make colors much lighter
     return tuple(min(255, int(c * factor)) for c in color)
 
 # Initialize pygame
 pygame.init()
-screen = pygame.display.set_mode((WIDTH, HEIGHT + 50))  # Extra space for buttons
+screen = pygame.display.set_mode((WIDTH, HEIGHT + 100))  # Extra space for buttons
 pygame.display.set_caption("K-Nearest Neighbors Visualization")
 font = pygame.font.Font(None, 24)
 
-# Generate points with rotating colors
-def generate_points(n, width, height):
-    global color_index
-    points = []
-    for _ in range(n):
-        points.append((
-            random.randint(20, width - 20),
-            random.randint(20, height - 70),
-            COLORS[color_index % len(COLORS)]
-        ))
-        color_index += 1
+def generate_points(existing_points=None):
+    points = existing_points if existing_points else []
+    current_colors = set(p[2] for p in points)
+    missing_colors = [COLORS[i] for i in range(num_colors) if COLORS[i] not in current_colors]
+    
+    for color in missing_colors:
+        cluster_x = random.randint(100, WIDTH - 100)
+        cluster_y = random.randint(100, HEIGHT - 150)
+        for _ in range(points_per_color):
+            points.append((
+                cluster_x + random.randint(-20, 20),
+                cluster_y + random.randint(-20, 20),
+                color
+            ))
     return points
 
-points = generate_points(POINT_COUNT, WIDTH, HEIGHT)
+points = generate_points()
 selected_index = None
 
-# Compute Euclidean distance
 def euclidean_distance(p1, p2):
     return math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2)
 
-# Find K-nearest neighbors
 def find_k_nearest(point, points, k):
     distances = [(p, euclidean_distance(point, (p[0], p[1]))) for p in points if (p[0], p[1]) != point]
     distances.sort(key=lambda x: x[1])
     return [p[0] for p in distances[:k]]
 
-# Classify grid cells
 def classify_grid():
     for x in range(0, WIDTH, GRID_SIZE):
         for y in range(0, HEIGHT, GRID_SIZE):
@@ -61,12 +67,13 @@ def classify_grid():
                 lighter_color = lighten_color(most_common_color)
                 pygame.draw.rect(screen, lighter_color, (x, y, GRID_SIZE, GRID_SIZE))
 
-# Buttons
 buttons = {
     "Increase K": (50, HEIGHT + 10, 100, 30),
     "Decrease K": (200, HEIGHT + 10, 100, 30),
-    "Add Point": (350, HEIGHT + 10, 100, 30),
-    "Remove Point": (500, HEIGHT + 10, 100, 30)
+    "Add Color": (350, HEIGHT + 10, 100, 30),
+    "Remove Color": (500, HEIGHT + 10, 120, 30),
+    "Increase Points": (50, HEIGHT + 50, 150, 30),
+    "Decrease Points": (250, HEIGHT + 50, 150, 30)
 }
 
 def draw_buttons():
@@ -75,13 +82,13 @@ def draw_buttons():
         label = font.render(text, True, BLACK)
         screen.blit(label, (x + 10, y + 5))
     
-    # Display K value and point count
     k_label = font.render(f"K: {K}", True, BLACK)
-    points_label = font.render(f"Points: {len(points)}", True, BLACK)
+    colors_label = font.render(f"Colors: {num_colors}", True, BLACK)
+    points_label = font.render(f"Points/Color: {points_per_color}", True, BLACK)
     screen.blit(k_label, (650, HEIGHT + 10))
-    screen.blit(points_label, (650, HEIGHT + 30))
+    screen.blit(colors_label, (650, HEIGHT + 30))
+    screen.blit(points_label, (650, HEIGHT + 50))
 
-# Main loop
 running = True
 while running:
     screen.fill(WHITE)
@@ -104,11 +111,18 @@ while running:
                             K += 1
                         elif key == "Decrease K" and K > 1:
                             K -= 1
-                        elif key == "Add Point":
-                            points.append((random.randint(20, WIDTH - 20), random.randint(20, HEIGHT - 70), COLORS[color_index % len(COLORS)]))
-                            color_index += 1
-                        elif key == "Remove Point" and points:
-                            points.pop()
+                        elif key == "Add Color" and num_colors < MAX_COLORS:
+                            num_colors += 1
+                            points = generate_points(points)
+                        elif key == "Remove Color" and num_colors > 1:
+                            num_colors -= 1
+                            points = [p for p in points if p[2] in COLORS[:num_colors]]
+                        elif key == "Increase Points":
+                            points_per_color += 1
+                            points = generate_points(points)
+                        elif key == "Decrease Points" and points_per_color > 1:
+                            points_per_color -= 1
+                            points = generate_points(points)
         elif event.type == pygame.MOUSEBUTTONUP:
             selected_index = None
         elif event.type == pygame.MOUSEMOTION and selected_index is not None:
@@ -118,7 +132,8 @@ while running:
             points[selected_index] = (x, y, points[selected_index][2])
     
     for p in points:
-        pygame.draw.circle(screen, p[2], (p[0], p[1]), 6)  # Slightly larger for better visibility
+        pygame.draw.circle(screen, p[2], (p[0], p[1]), 6)
+        pygame.draw.circle(screen, BLACK, (p[0], p[1]), 7, 1)
     
     draw_buttons()
     pygame.display.flip()
