@@ -67,10 +67,13 @@ A Python application for visualizing the **K-Nearest Neighbors (KNN)** algorithm
 ## **File Structure**
 ```
 KNN-Visualizer/
-├── app.py                     # Main application script
-├── MinecraftRegular-Bmg3.otf  # Custom font file
-├── README.md                  # This file
-└── screenshots/               # Screenshots
+├── app.py                  # Main application script
+├── fonts/                  # Folder containing custom fonts
+│   ├── MinecraftRegular-Bmg3.otf
+│   ├── LexendDeca-Medium.ttf
+│   └── Starborn.ttf
+├── README.md               # This file
+└── screenshots/            # Folder for screenshots
     ├── screenshot-1.png
     └── screenshot-2.png
 ```
