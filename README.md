@@ -24,6 +24,7 @@ A Python application for visualizing the **K-Nearest Neighbors (KNN)** algorithm
 ## **Requirements**
 - Python 3.12
 - Pygame
+- Desired font uploaded to directory
 
 ---
 
