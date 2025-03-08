@@ -39,7 +39,7 @@ dragging = False
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("K-Nearest Neighbors Visualization")
+pygame.display.set_caption("K-Nearest Neighbours Visualisation")
 font = pygame.font.Font("MinecraftRegular-Bmg3.otf", 16) 
 title_font = pygame.font.Font("MinecraftRegular-Bmg3.otf", 36)
 menu_font = pygame.font.Font("MinecraftRegular-Bmg3.otf", 20)
@@ -50,7 +50,7 @@ def generate_points(existing_points=None):
     
     for color in COLORS[:num_colors]:
         cluster_x = random.randint(100, WIDTH - 100)
-        cluster_y = random.randint(100, HEIGHT - 150)
+        cluster_y = random.randint(100, HEIGHT - 260)
         while color_counts[color] < points_per_color:
             points.append((
                 cluster_x + random.randint(-20, 20),
@@ -109,18 +109,18 @@ class Slider:
 buttons = {
     "Increase Points": (50, HEIGHT - 180, 150, 30),
     "Decrease Points": (250, HEIGHT - 180, 150, 30),
-    "Add Color": (450, HEIGHT - 180, 100, 30),
-    "Remove Color": (650, HEIGHT - 180, 130, 30)
+    "Add Colour": (450, HEIGHT - 180, 100, 30),
+    "Remove Colour": (650, HEIGHT - 180, 130, 30)
 }
 
 def draw_controls():
-    pygame.draw.rect(screen, WHITE, (0, HEIGHT - 200, WIDTH, 200))
+    pygame.draw.rect(screen, WHITE, (0, HEIGHT - 100, WIDTH, 200))
 
     draw_buttons()
     
     k_label = font.render(f"K: {int(K)}", True, BLACK)
-    colors_label = font.render(f"Colors: {num_colors}", True, BLACK)
-    points_label = font.render(f"Points/Color: {points_per_color}", True, BLACK)
+    colors_label = font.render(f"Colours: {num_colors}", True, BLACK)
+    points_label = font.render(f"Points/Colour: {points_per_color}", True, BLACK)
     screen.blit(k_label, (50, HEIGHT - 140))
     screen.blit(colors_label, (50, HEIGHT - 120))
     screen.blit(points_label, (50, HEIGHT - 100))
@@ -130,11 +130,8 @@ def draw_controls():
 
 k_slider = Slider(50, HEIGHT - 60, 200, 20, 1, 10, K)
 
-main_title = title_font.render("KNN Visualizer", True, BLACK)
+main_title = title_font.render("KNN Visualiser", True, BLACK)
 main_title_rect = main_title.get_rect(center=(WIDTH // 2, 50))
-
-menu_title = menu_font.render("Menu:", True, BROWN)
-menu_title_rect = menu_title.get_rect(center=(WIDTH // 2, HEIGHT - 225))
 
 def draw_titles():
     title_box_width = main_title.get_width() + 40
@@ -146,16 +143,6 @@ def draw_titles():
     pygame.draw.rect(screen, BROWN, (title_box_x, title_box_y, title_box_width, title_box_height), 3)
 
     screen.blit(main_title, main_title_rect)
-
-    menu_box_width = menu_title.get_width() + 40 
-    menu_box_height = menu_title.get_height() + 20
-    menu_box_x = menu_title_rect.centerx - menu_box_width // 2
-    menu_box_y = menu_title_rect.centery - menu_box_height // 2
-
-    pygame.draw.rect(screen, WHITE, (menu_box_x, menu_box_y, menu_box_width, menu_box_height))
-    pygame.draw.rect(screen, BROWN, (menu_box_x, menu_box_y, menu_box_width, menu_box_height), 3)
-
-    screen.blit(menu_title, menu_title_rect)
 
 BUTTON_WIDTH = 150
 BUTTON_HEIGHT = 30
@@ -174,11 +161,11 @@ buttons = {
         "rect": (start_x + BUTTON_WIDTH + BUTTON_PADDING, HEIGHT - 180, BUTTON_WIDTH, BUTTON_HEIGHT),
         "offset": (0, 0)
     },
-    "Add Color": {
+    "Add Colour": {
         "rect": (start_x + 2 * (BUTTON_WIDTH + BUTTON_PADDING), HEIGHT - 180, BUTTON_WIDTH, BUTTON_HEIGHT),
         "offset": (0, 0)
     },
-    "Remove Color": {
+    "Remove Colour": {
         "rect": (start_x + 3 * (BUTTON_WIDTH + BUTTON_PADDING), HEIGHT - 180, BUTTON_WIDTH, BUTTON_HEIGHT),
         "offset": (0, 0)
     }
@@ -229,10 +216,10 @@ while running:
                         elif key == "Decrease Points" and points_per_color > 1:
                             points_per_color -= 1
                             points = generate_points(points)
-                        elif key == "Add Color" and num_colors < MAX_COLORS:
+                        elif key == "Add Colour" and num_colors < MAX_COLORS:
                             num_colors += 1
                             points = generate_points(points)
-                        elif key == "Remove Color" and num_colors > 1:
+                        elif key == "Remove Colour" and num_colors > 1:
                             num_colors -= 1
                             points = [p for p in points if p[2] in COLORS[:num_colors]]
                 if k_slider.rect.collidepoint(mx, my):
