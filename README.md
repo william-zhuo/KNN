@@ -1,60 +1,95 @@
-# KNN
-Overview
+# **KNN Visualizer**
 
-This project implements an interactive k-Nearest Neighbors (KNN) classifier that allows users to visualize how the algorithm works. Users can add data points, adjust parameters like the number of neighbors (k), and see real-time predictions.
+A Python application for visualizing the **K-Nearest Neighbors (KNN)** algorithm using **Pygame**. This interactive tool allows you to experiment with different parameters, such as the number of points, colors, and the value of **K**, to see how the KNN algorithm classifies points on a grid.
 
-Features
+---
 
-Interactive Data Input: Users can add points to the dataset dynamically.
+## **Features**
+- **Interactive Grid**: Click and drag points to see how the KNN algorithm classifies them in real-time.
+- **Customizable Parameters**:
+  - Adjust the number of points per color.
+  - Change the number of colors.
+  - Modify the value of **K** (number of neighbors).
+- **Dynamic Visualization**: The grid updates automatically as you move points or change parameters.
+- **User-Friendly Interface**: Buttons and sliders make it easy to interact with the application.
 
-Adjustable Parameters: Change the value of k to see how it affects classification.
+---
 
-Real-time Predictions: Predictions update automatically based on user input.
+## **Screenshots**
+![Screenshot 1](screenshots/screenshot-1.png)  
+*Example of the KNN Visualizer in action.*
 
-Visualization: A graphical representation of the dataset and classification boundaries.
+---
 
-Technologies Used:
+## **Requirements**
+- Python 3.12
+- Pygame
 
-- Python
+---
 
-- PyGame
+## **How to Run**
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/william-zhuo/KNN.git
+   cd KNN
+   ```
 
+2. **Install Pygame**:
+   If you don’t have Pygame installed, run:
+   ```bash
+   pip install pygame
+   ```
 
-Usage
+3. **Run the Application**:
+   ```bash
+   python app.py
+   ```
 
-Run the application:
+---
 
-python app.py
+## **How to Use**
+1. **Add Points**:
+   - Use the **Increase Points** button to add more points of the current colors.
+   - Use the **Decrease Points** button to remove points.
 
-Interactive Features
+2. **Change Colors**:
+   - Use the **Add Color** button to introduce a new color.
+   - Use the **Remove Color** button to reduce the number of colors.
 
-tbd
+3. **Adjust K**:
+   - Use the slider to change the value of **K** (number of neighbors).
 
-Code Structure
+4. **Drag Points**:
+   - Click and drag points to see how the classification changes in real-time.
 
-interactive-knn/
-│── app.py           # Main application script
-│── knn.py           # KNN implementation
-│── utils.py         # Helper functions
-│── requirements.txt # Dependencies
-│── README.md        # Documentation
+---
 
-Example
+## **File Structure**
+```
+KNN-Visualizer/
+├── app.py                     # Main application script
+├── MinecraftRegular-Bmg3.otf  # Custom font file
+├── README.md                  # This file
+└── screenshots/               # Screenshots
+    ├── screenshot-1.png
+    └── screenshot-2.png
+```
 
-If a dataset consists of red and blue points, adding a new point will classify it based on the k nearest neighbors.
+---
 
+## **Customization**
+- **Font**: Replace `MinecraftRegular-Bmg3.otf` with your preferred font file and update the path in the code.
+- **Colors**: Modify the `COLORS` and `LIGHTER_COLORS` lists in the code to use your own color schemes.
 
+---
 
-Future Improvements
+## **Acknowledgments**
+- Thanks to the **Pygame** community for their amazing library.
+- Inspired by educational visualizations of machine learning algorithms.
+- Special thanks to Kyle Sava, who motivated our team to create this.
 
-Add support for different distance metrics.
+---
 
-Implement additional machine learning models for comparison.
+### **Enjoy Visualizing KNN! 🚀**
 
-Enhance UI with interactive drag-and-drop features.
-
-
-Contact
-
-For questions or contributions, reach out to Kyle Sava (that's not us btw).
-
+---
